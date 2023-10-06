@@ -6,16 +6,22 @@ const Statistics = ({good, neutral, bad}) => {
   const sum = good + neutral + bad
   const average = sum > 0 ? ((good * 1) + (bad * -1)) / sum : 0
   const positive = sum > 0 ? (good / sum) * 100 : 0
-  return (
-    <>
-      <div>good {good}</div>
-      <div>neutral {neutral}</div>
-      <div>bad {bad}</div>
-      <div>all {sum}</div>
-      <div>average {average}</div>
-      <div>positive {positive}%</div>
-    </>
-  )
+  if (sum > 0) {
+    return (
+      <>
+        <div>good {good}</div>
+        <div>neutral {neutral}</div>
+        <div>bad {bad}</div>
+        <div>all {sum}</div>
+        <div>average {average}</div>
+        <div>positive {positive}%</div>
+      </>
+    )
+  } else {
+    return (
+      <div>No feedback given</div>
+    )
+  }
 }
 
 const App = () => {
