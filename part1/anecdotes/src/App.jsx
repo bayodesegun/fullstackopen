@@ -14,6 +14,7 @@ const App = () => {
 
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState({})
+  const [popular, setPopular] = useState(0)
 
   const getRandomAnecdote = () => {
     // Get a random number between 0 and anecdotes.length
@@ -21,20 +22,36 @@ const App = () => {
     setSelected(rand)
   }
 
+  const getLargestKey = obj => {
+    let largestValue = Object.keys(obj)[0]
+    let largestKey = Object.values(obj)[0]
+    for (let [key, val] of Object.entries(obj)) {
+      if (val > largestValue) {
+        largestKey = key
+        largestValue = val
+      }
+    }
+    return largestKey
+  }
+
   const setPointsOnClick = () => {
     let newPoints = {...points}
     newPoints[selected] = newPoints[selected] ? newPoints[selected] + 1 : 1
     setPoints(newPoints)
+    setPopular(Number(getLargestKey(newPoints)))
   }
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
       <br />
       has {points[selected] ? points[selected] : 0} votes
       <br />
       <button onClick={setPointsOnClick}>vote</button>
       <button onClick={getRandomAnecdote}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      {anecdotes[popular]}
     </div>
   )
 }
