@@ -13,17 +13,27 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState({})
+
   const getRandomAnecdote = () => {
     // Get a random number between 0 and anecdotes.length
     let rand = Math.floor(Math.random() * anecdotes.length)
-    console.log(rand)
     setSelected(rand)
+  }
+
+  const setPointsOnClick = () => {
+    let newPoints = {...points}
+    newPoints[selected] = newPoints[selected] ? newPoints[selected] + 1 : 1
+    setPoints(newPoints)
   }
 
   return (
     <div>
       {anecdotes[selected]}
       <br />
+      has {points[selected] ? points[selected] : 0} votes
+      <br />
+      <button onClick={setPointsOnClick}>vote</button>
       <button onClick={getRandomAnecdote}>next anecdote</button>
     </div>
   )
