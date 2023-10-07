@@ -18,13 +18,16 @@ const App = () => {
 
   const getRandomAnecdote = () => {
     // Get a random number between 0 and anecdotes.length
-    let rand = Math.floor(Math.random() * anecdotes.length)
+    let rand = selected
+    while (rand == selected) {
+      rand = Math.floor(Math.random() * anecdotes.length)
+    }
     setSelected(rand)
   }
 
   const getLargestKey = obj => {
-    let largestValue = Object.keys(obj)[0]
-    let largestKey = Object.values(obj)[0]
+    let largestValue = 0
+    let largestKey = '0'
     for (let [key, val] of Object.entries(obj)) {
       if (val > largestValue) {
         largestKey = key
