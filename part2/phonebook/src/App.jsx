@@ -18,6 +18,17 @@ const App = () => {
   }
   useEffect(hook, [])
 
+  const updatePersonNumber = (currentPerson, newNumber) => {
+    if (confirm(`${newName} is already added to the phonebook. Replace the old number with a new one?`)) {
+      const updatedPerson = {...currentPerson, number: newNumber}
+      personService
+        .update(currentPerson.id, updatedPerson)
+        .then(personResponse => {
+          setPersons(persons.map(person => person.id === currentPerson.id ? personResponse : person))
+        })
+    }
+  }
+
   const addPerson = (event) => {
     event.preventDefault()
     if (newName === '') {
@@ -28,8 +39,14 @@ const App = () => {
       alert('Please enter a number!')
       return
     }
-    if (persons.filter(person => person.name === newName).length > 0) {
-      alert(`${newName} is already added to the phonebook`)
+    const thisPerson = persons.find(person => person.name === newName)
+    if (thisPerson) {
+      // Same name but a different number?
+      if (newNumber !== '' && thisPerson.number !== newNumber) {
+        updatePersonNumber(thisPerson, newNumber)
+      } else {
+        alert(`${newName} is already added to the phonebook.`)
+      }
       return
     }
     const newPerson = {
