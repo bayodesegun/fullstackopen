@@ -11,7 +11,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [nameFilter, setNameFilter] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState('')
 
   const hook = () => {
     personService
@@ -22,7 +23,8 @@ const App = () => {
   }
   useEffect(hook, [])
 
-  const showNotification = (message) => {
+  const showNotification = (message, type) => {
+    setMessageType(type)
     setMessage(message)
     setTimeout(() => setMessage(null), 5000)
   }
@@ -34,7 +36,12 @@ const App = () => {
         .update(currentPerson.id, updatedPerson)
         .then(personResponse => {
           setPersons(persons.map(person => person.id === currentPerson.id ? personResponse : person))
-          showNotification(`Updated ${currentPerson.name}'s number to ${newNumber}.`)
+          showNotification(`Updated ${currentPerson.name}'s number to ${newNumber}.`, 'success')
+        })
+        // eslint-disable-next-line no-unused-vars
+        .catch(_e => {
+          showNotification(`${currentPerson.name} was already removed from the server.`, 'error')
+          setPersons(persons.filter(person => person.id !== currentPerson.id))
         })
     }
   }
@@ -67,7 +74,7 @@ const App = () => {
       .create(newPerson)
       .then(createdPerson => {
         setPersons(persons.concat(createdPerson))
-        showNotification(`Added ${newName} (${newNumber}) to the phonebook.`)
+        showNotification(`Added ${newName} (${newNumber}) to the phonebook.`, 'success')
       })
   }
 
@@ -78,7 +85,7 @@ const App = () => {
         .then( noContent => {
           console.log('Content is', noContent)
           setPersons(persons.filter(person => person.id !== personToDelete.id))
-          showNotification(`Deleted ${personToDelete.name} from the phonebook.`)
+          showNotification(`Deleted ${personToDelete.name} from the phonebook.`, 'success')
         })
     }
   }
@@ -86,7 +93,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} messageType={messageType} />
       <NameFilter
         nameFilter={nameFilter}
         setNameFilter={setNameFilter}
