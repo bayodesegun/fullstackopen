@@ -1,27 +1,20 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 import NameFilter from './components/NameFilter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    {
-      name: 'Arto Hellas',
-      number: '08012345678'
-    }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [nameFilter, setNameFilter] = useState('')
 
   const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
+    personService
+      .getAll()
+      .then(allPersons => setPersons(allPersons))
   }
   useEffect(hook, [])
 
@@ -39,13 +32,15 @@ const App = () => {
       alert(`${newName} is already added to the phonebook`)
       return
     }
-    setPersons(persons.concat(
-      {
-        name: newName,
-        number: newNumber,
-        id: persons.length() + 1
-      }
-    ))
+    const newPerson = {
+      name: newName,
+      number: newNumber
+    }
+    personService
+      .create(newPerson)
+      .then(createdPerson => {
+        setPersons(persons.concat(createdPerson))
+      })
   }
 
   return (
