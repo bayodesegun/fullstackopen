@@ -18,7 +18,7 @@ const App = () => {
   }
   useEffect(hook, [])
 
-  const addNewName = (event) => {
+  const addPerson = (event) => {
     event.preventDefault()
     if (newName === '') {
       alert('Please enter a name!')
@@ -43,6 +43,17 @@ const App = () => {
       })
   }
 
+  const deletePerson = (personToDelete) => {
+    if (confirm(`Delete ${personToDelete.name}?`)) {
+      personService
+        .destroy(personToDelete.id)
+        .then( noContent => {
+          console.log('Content is', noContent)
+          setPersons(persons.filter(person => person.id !== personToDelete.id))
+        })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -56,12 +67,13 @@ const App = () => {
         setNewName={setNewName}
         newNumber={newNumber}
         setNewNumber={setNewNumber}
-        addNewName={addNewName}
+        addPerson={addPerson}
       />
       <h3>Numbers</h3>
       <Persons
         persons={persons}
         nameFilter={nameFilter}
+        deletePerson={deletePerson}
       />
     </div>
   )

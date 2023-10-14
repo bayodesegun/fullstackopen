@@ -1,4 +1,4 @@
-const PersonForm = ({newName, setNewName, newNumber, setNewNumber, addNewName}) => (
+const PersonForm = ({newName, setNewName, newNumber, setNewNumber, addPerson}) => (
 	<form>
 		<div>
 			name: <input value={newName} onChange={(event) => setNewName(event.target.value)} />
@@ -7,7 +7,7 @@ const PersonForm = ({newName, setNewName, newNumber, setNewNumber, addNewName}) 
 			number: <input value={newNumber} onChange={(event) => setNewNumber(event.target.value)} />
 		</div>
 		<div>
-			<button type="submit" onClick={addNewName}>add</button>
+			<button type="submit" onClick={addPerson}>add</button>
 		</div>
 	</form>
 )
