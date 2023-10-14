@@ -4,19 +4,28 @@ import personService from './services/persons'
 import NameFilter from './components/NameFilter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [nameFilter, setNameFilter] = useState('')
+  const [message, setMessage] = useState('')
 
   const hook = () => {
     personService
       .getAll()
-      .then(allPersons => setPersons(allPersons))
+      .then(allPersons => {
+        setPersons(allPersons)
+      })
   }
   useEffect(hook, [])
+
+  const showNotification = (message) => {
+    setMessage(message)
+    setTimeout(() => setMessage(null), 5000)
+  }
 
   const updatePersonNumber = (currentPerson, newNumber) => {
     if (confirm(`${newName} is already added to the phonebook. Replace the old number with a new one?`)) {
@@ -25,6 +34,7 @@ const App = () => {
         .update(currentPerson.id, updatedPerson)
         .then(personResponse => {
           setPersons(persons.map(person => person.id === currentPerson.id ? personResponse : person))
+          showNotification(`Updated ${currentPerson.name}'s number to ${newNumber}.`)
         })
     }
   }
@@ -57,6 +67,7 @@ const App = () => {
       .create(newPerson)
       .then(createdPerson => {
         setPersons(persons.concat(createdPerson))
+        showNotification(`Added ${newName} (${newNumber}) to the phonebook.`)
       })
   }
 
@@ -67,6 +78,7 @@ const App = () => {
         .then( noContent => {
           console.log('Content is', noContent)
           setPersons(persons.filter(person => person.id !== personToDelete.id))
+          showNotification(`Deleted ${personToDelete.name} from the phonebook.`)
         })
     }
   }
@@ -74,6 +86,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <NameFilter
         nameFilter={nameFilter}
         setNameFilter={setNameFilter}
