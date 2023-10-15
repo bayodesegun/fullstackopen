@@ -21,20 +21,21 @@ const App = () => {
   }
   useEffect(getCountries, [])
 
-  const updateFilter = () => {
-    if (filteredCountries.length === 1) {
-      setCountry(filteredCountries[0])
-    } else {
-      setCountry(null)
-    }
-  }
-  useEffect(updateFilter, [filteredCountries])
+  // const updateFilter = () => {
+
+  // }
+  // useEffect(updateFilter, [filteredCountries])
 
   const filterCountries = (event) => {
     const filter = event.target.value.toLowerCase()
     setFilter(filter)
     const _filteredCountries = countries.filter(_country => _country.name.common.toLowerCase().includes(filter))
     setFilteredCountries(_filteredCountries)
+    if (_filteredCountries.length === 1) {
+      setCountry(_filteredCountries[0])
+    } else {
+      setCountry(null)
+    }
   }
 
   return (
@@ -48,6 +49,7 @@ const App = () => {
             countriesToShow={filteredCountries}
             countriesCount={countries.length}
             filter={filter}
+            setCountry={setCountry}
           />
         }
       </div>

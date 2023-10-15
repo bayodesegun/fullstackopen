@@ -1,4 +1,4 @@
-const CountryList = ({countriesToShow, countriesCount, filter}) => {
+const CountryList = ({countriesToShow, countriesCount, filter, setCountry}) => {
 
   if (countriesCount === 0) {
     return <div>Fetching countries data...</div>
@@ -15,7 +15,7 @@ const CountryList = ({countriesToShow, countriesCount, filter}) => {
       <>{
         countriesToShow.map(country =>
           (<div key={country.name.official}>
-            {country.name.common}
+            {country.name.common} <button onClick={() => setCountry(country)}>show</button>
           </div>)
         )
       }
