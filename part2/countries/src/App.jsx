@@ -8,6 +8,7 @@ import './App.css'
 const App = () => {
   const [countries, setCountries] = useState([])
   const [country, setCountry] = useState(null)
+  const [weather, setWeather] = useState(null)
   const [filter, setFilter] = useState('')
   const [filteredCountries, setFilteredCountries] = useState([])
 
@@ -21,21 +22,25 @@ const App = () => {
   }
   useEffect(getCountries, [])
 
-  // const updateFilter = () => {
-
-  // }
-  // useEffect(updateFilter, [filteredCountries])
-
   const filterCountries = (event) => {
     const filter = event.target.value.toLowerCase()
     setFilter(filter)
     const _filteredCountries = countries.filter(_country => _country.name.common.toLowerCase().includes(filter))
     setFilteredCountries(_filteredCountries)
     if (_filteredCountries.length === 1) {
-      setCountry(_filteredCountries[0])
+      setCountryAndWeather(_filteredCountries[0])
     } else {
       setCountry(null)
     }
+  }
+
+  const setCountryAndWeather = (country) => {
+    setCountry(country)
+    countriesService
+      .getWeather(country.capital[0])
+      .then(data => {
+        setWeather(data)
+      })
   }
 
   return (
@@ -43,13 +48,13 @@ const App = () => {
       <div>
         Find countries <input onChange={filterCountries} disabled={countries.length === 0} />
         { country !== null ?
-          <Country country={country} />
+          <Country country={country} weather={weather} />
           :
           <CountryList
             countriesToShow={filteredCountries}
             countriesCount={countries.length}
             filter={filter}
-            setCountry={setCountry}
+            setCountry={setCountryAndWeather}
           />
         }
       </div>
