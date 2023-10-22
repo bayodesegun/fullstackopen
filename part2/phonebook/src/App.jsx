@@ -38,10 +38,8 @@ const App = () => {
           setPersons(persons.map(person => person.id === currentPerson.id ? personResponse : person))
           showNotification(`Updated ${currentPerson.name}'s number to ${newNumber}.`, 'success')
         })
-        // eslint-disable-next-line no-unused-vars
-        .catch(_e => {
-          showNotification(`${currentPerson.name} was already removed from the server.`, 'error')
-          setPersons(persons.filter(person => person.id !== currentPerson.id))
+        .catch(error => {
+          showNotification(error.response.data.error, 'error')
         })
     }
   }
@@ -75,6 +73,9 @@ const App = () => {
       .then(createdPerson => {
         setPersons(persons.concat(createdPerson))
         showNotification(`Added ${newName} (${newNumber}) to the phonebook.`, 'success')
+      })
+      .catch(error => {
+        showNotification(error.response.data.error, 'error')
       })
   }
 
